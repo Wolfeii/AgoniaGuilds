@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 import com.wolfeiii.agoniaguilds.AgoniaGuilds;
 import com.wolfeiii.agoniaguilds.guild.Guild;
+import com.wolfeiii.agoniaguilds.storage.bridge.impl.PlayersDatabaseBridge;
 import com.wolfeiii.agoniaguilds.utilities.logging.Debug;
 import com.wolfeiii.agoniaguilds.utilities.logging.Log;
 import com.wolfeiii.agoniaguilds.utilities.objects.SequentialListBuilder;
@@ -16,10 +17,14 @@ import java.util.*;
 
 public class UserManager {
 
-    private static final AgoniaGuilds plugin = AgoniaGuilds.getAgoniaGuilds();
+    private final AgoniaGuilds plugin;
 
     private final Map<UUID, GuildUser> users = new HashMap<>();
     private final Map<String, GuildUser> usersByNames = new HashMap<>();
+
+    public UserManager(AgoniaGuilds plugin) {
+        this.plugin = plugin;
+    }
 
     public GuildUser getGuildUser(String name) {
         Preconditions.checkNotNull(name, "name kan inte vara null.");
@@ -59,10 +64,10 @@ public class UserManager {
         GuildUser superiorPlayer = this.users.get(uuid);
 
         if (createIfNotExists && superiorPlayer == null) {
-            superiorPlayer = plugin.getFactory().createPlayer(uuid);
+            superiorPlayer = plugin.getFactory().createUser(uuid);
             addPlayerInternal(superiorPlayer);
             if (saveToDatabase) {
-                // TODO: Save to Database, PlayersDatabaseBridge.insertPlayer(superiorPlayer);
+                PlayersDatabaseBridge.insertPlayer(superiorPlayer);
             }
         }
 
@@ -79,48 +84,12 @@ public class UserManager {
                 .build(getAllPlayers());
     }
 
-    public void replacePlayers(GuildUser originPlayer, @Nullable GuildUser newPlayer) {
-        Log.debug(Debug.REPLACE_PLAYER, originPlayer, newPlayer);
-
-        // We first want to replace the player for his own guild
-        Guild playerGuild = originPlayer.getGuild();
-        if (playerGuild != null) {
-            playerGuild.replacePlayers(originPlayer, newPlayer);
-            if (playerGuild.getOwner() != newPlayer)
-                Log.debugResult(Debug.REPLACE_PLAYER, "Ägaren byttes inte ut", "Nuvarande ägare: " + playerGuild.getOwner().getUniqueId());
-        }
-
-        for (Guild guild : plugin.getGuildManager().getIslands()) {
-            if (guild != playerGuild)
-                guild.replacePlayers(originPlayer, newPlayer);
-        }
-
-        if (newPlayer == null) {
-            // PlayersDatabaseBridge.deletePlayer(originPlayer);
-        } else {
-            newPlayer.merge(originPlayer);
-            plugin.getEventsBus().callPlayerReplaceEvent(originPlayer, newPlayer);
-        }
-    }
-
-    // Updating last time status
-    public void savePlayers() {
-        for (Player player : Bukkit.getOnlinePlayers())
-            PlayersDatabaseBridge.saveLastTimeStatus(getSuperiorPlayer(player));
-
-        List<GuildUser> modifiedPlayers = new SequentialListBuilder<GuildUser>()
-                .filter(PlayersDatabaseBridge::isModified)
-                .build(getAllPlayers());
-
-        if (!modifiedPlayers.isEmpty())
-            modifiedPlayers.forEach(PlayersDatabaseBridge::executeFutureSaves);
-    }
 
     public List<GuildUser> getAllPlayers() {
         return new SequentialListBuilder<GuildUser>().build(this.users.values());
     }
 
-    private void addPlayerInternal(GuildUser guildUser) {
+    public void addPlayerInternal(GuildUser guildUser) {
         this.users.put(guildUser.getUniqueId(), guildUser);
 
         String playerName = guildUser.getName();

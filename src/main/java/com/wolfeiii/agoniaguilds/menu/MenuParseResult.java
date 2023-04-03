@@ -1,0 +1,69 @@
+package com.wolfeiii.agoniaguilds.menu;
+
+import com.wolfeiii.agoniaguilds.menu.interfaces.layout.MenuLayout;
+import com.wolfeiii.agoniaguilds.menu.interfaces.parser.MenuParser;
+import com.wolfeiii.agoniaguilds.menu.interfaces.view.MenuView;
+import com.wolfeiii.agoniaguilds.utilities.sounds.GameSound;
+import org.bukkit.configuration.file.YamlConfiguration;
+
+import javax.annotation.Nullable;
+import java.util.List;
+
+public class MenuParseResult<V extends MenuView<V, ?>> implements MenuParser.ParseResult<V> {
+
+    private final MenuLayout.Builder<V> menuLayoutBuilder;
+    private final GameSound openingSound;
+    private final boolean isPreviousMoveAllowed;
+    private final boolean isSkipOneItem;
+    private final MenuPatternSlots patternSlots;
+    private final YamlConfiguration config;
+
+    public MenuParseResult(MenuLayout.Builder<V> menuLayoutBuilder) {
+        this(menuLayoutBuilder, null, true, false, null, null);
+    }
+
+    public MenuParseResult(MenuLayout.Builder<V> menuLayoutBuilder, @Nullable GameSound openingSound,
+                           boolean isPreviousMoveAllowed, boolean isSkipOneItem,
+                           MenuPatternSlots patternSlots, YamlConfiguration config) {
+        this.menuLayoutBuilder = menuLayoutBuilder;
+        this.openingSound = openingSound;
+        this.isPreviousMoveAllowed = isPreviousMoveAllowed;
+        this.isSkipOneItem = isSkipOneItem;
+        this.patternSlots = patternSlots;
+        this.config = config;
+    }
+
+    @Override
+    public MenuLayout.Builder<V> getLayoutBuilder() {
+        return menuLayoutBuilder;
+    }
+
+    @Nullable
+    public GameSound getOpeningSound() {
+        return openingSound;
+    }
+
+    @Override
+    public boolean isPreviousMoveAllowed() {
+        return isPreviousMoveAllowed;
+    }
+
+    @Override
+    public boolean isSkipOneItem() {
+        return isSkipOneItem;
+    }
+
+    @Override
+    public List<Integer> getSlotsForChar(char ch) {
+        return patternSlots.getSlots(ch);
+    }
+
+    public MenuPatternSlots getPatternSlots() {
+        return patternSlots;
+    }
+
+    public YamlConfiguration getConfig() {
+        return config;
+    }
+
+}

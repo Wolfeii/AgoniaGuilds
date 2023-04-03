@@ -1,0 +1,39 @@
+######################################################
+##                                                  ##
+##                   AgoniaGuilds                   ##
+##                Skapat av Wolfeiii                ##
+##                                                  ##
+######################################################
+
+title: 'Guild Medlemmar'
+previous-menu: true
+
+pattern:
+  - '@ @ @ @ @ @ @ @ @'
+  - '@ @ @ @ @ @ @ @ @'
+  - '@ @ @ @ @ @ @ @ @'
+  - '@ @ @ @ @ @ @ @ @'
+  - '@ @ @ @ @ @ @ @ @'
+  - '# # # % # ^ # # #'
+
+slots: '@'
+previous-page: '%'
+next-page: '^'
+
+
+items:
+  '@':
+    type: SKULL_ITEM
+    data: 3
+    name: '&e{0}'
+    lore:
+      - '&8Spelare Information'
+      - ' '
+      - '&7Roll: &7{1}'
+      - '&7Sågs senast: {2}'
+  '%':
+    type: ARROW
+    name: '{0}Previous Page'
+  '^':
+    type: ENDER_PEARL
+    name: '{0}Next Page'

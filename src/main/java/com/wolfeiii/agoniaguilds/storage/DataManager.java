@@ -2,6 +2,7 @@ package com.wolfeiii.agoniaguilds.storage;
 
 import com.wolfeiii.agoniaguilds.AgoniaGuilds;
 import com.wolfeiii.agoniaguilds.storage.loader.DatabaseLoader;
+import com.wolfeiii.agoniaguilds.storage.loader.sql.SQLDatabaseLoader;
 import com.wolfeiii.agoniaguilds.user.GuildUser;
 import com.wolfeiii.agoniaguilds.utilities.logging.Log;
 import com.wolfeiii.agoniaguilds.utilities.objects.BukkitExecutor;
@@ -32,11 +33,7 @@ public class DataManager {
 
         runState(DatabaseLoader.State.PRE_LOAD_DATA);
 
-        if (plugin.getEventsBus().callPluginLoadDataEvent(plugin)) {
-            loadPlayers();
-            loadIslands();
-            loadGrid();
-        }
+        loadPlayers();
 
         runState(DatabaseLoader.State.POST_LOAD_DATA);
     }
@@ -56,8 +53,6 @@ public class DataManager {
 
     private void loadDatabaseLoaders() {
         addDatabaseLoader(new CopyOldDatabase());
-        addDatabaseLoader(new DatabaseLoader_V1());
-        addDatabaseLoader(new BackupDatabase(plugin));
         addDatabaseLoader(new SQLDatabaseLoader(plugin));
     }
 

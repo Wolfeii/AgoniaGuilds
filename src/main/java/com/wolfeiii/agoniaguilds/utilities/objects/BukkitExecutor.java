@@ -108,6 +108,10 @@ public class BukkitExecutor {
         Bukkit.getScheduler().runTaskTimer(plugin, runnable, delay, delay);
     }
 
+    public static void syncDatabaseCalls() {
+        syncDatabaseCalls = true;
+    }
+
     public static NestedTask<Void> createTask() {
         return new NestedTask<Void>().complete();
     }

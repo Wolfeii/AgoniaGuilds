@@ -1,0 +1,178 @@
+######################################################
+##                                                  ##
+##                   AgoniaGuilds                   ##
+##                Skapat av Wolfeiii                ##
+##                                                  ##
+######################################################
+
+
+# Alla inställningar relaterat till Databasen av pluginet.
+database:
+  # För lokal databas, använd "SQLite".
+  # För distant/remote databas, använd "MySQL" eller "MariaDB" (Beror på hur du satt upp det).
+  type: SQLite
+  # Ifall om datastore foldern ska backupas när servern startar.
+  backup: true
+  # Distant/Remote databas information
+  address: 'localhost'
+  port: 3306
+  db-name: 'AgoniaGuilds'
+  user-name: 'root'
+  password: 'root'
+  prefix: ''
+  useSSL: false
+  allowPublicKeyRetrieval: true
+  waitTimeout: 600000
+  maxLifetime: 1800000
+
+# Sätter main kommandot av pluginet.
+# Du kan lägga till ett alias genom att lägga till "," efter kommando namnet, och dela dem med ",".
+# Du måste göra en full restart för att dessa ändringar skall ta effekt.
+guild-command: 'guilds,guild,agoniaguilds'
+
+
+# Alla normala världen för nya guilds som skapas.
+default-values:
+  # Sätter den normala mängden spelare en guild kan ha.
+  # Denna gräns kan utökas genom att använda /guild admin setteamlimit kommandot.
+  team-limit: 4
+
+# Alla inställningar relaterat till Guild roller.
+guild-roles:
+  # Denna roll ges till personer som inte är en del av din ö. Används inte riktigt nu men ifall det skulle implementeras claims eller liknande är denna bra.
+  guest:
+    # Ett eget namn för denna roll.
+    name: 'Gäst'
+    # En lista av permissions för gäster.
+    permissions: [ ]
+
+  # Roll stegen för guild medlemmar.
+  # Alla guild medlems roller skall vara här.
+  #  - Du kan lägga till hur många roller du vill.
+  #  - Default rollen för nya spelare har en vikt på 0.
+  #  - Varje roll har alla permissions för rollen innan den.
+  #  - Varje roll har ett custom id, som bestämmer ifall om rollens namn har ändrats.
+  #    Ändra inte id:s!!!! Dom måste vara i ordning.
+  ladder:
+    member:
+      id: 0
+      name: 'Medlem'
+      weight: 0
+      permissions:
+        - RANKUP
+    mod:
+      id: 1
+      name: 'Moderator'
+      weight: 1
+      permissions:
+        - INVITE_MEMBER
+        - KICK_MEMBER
+    admin:
+      id: 2
+      name: 'Administratör'
+      weight: 2
+      permissions:
+        - DEMOTE_MEMBERS
+        - PROMOTE_MEMBERS
+        - SET_PERMISSION
+        - SET_ROLE
+    leader:
+      id: 3
+      name: 'Ägare'
+      weight: 3
+      permissions:
+        - ALL
+
+# Borde listan med guild medlemmar i guild top också inkludera ägaren av guilden?
+guild-top-include-leader: true
+
+
+# Sätter default placeholders som kommer ges tillbaka om ön är null.
+# Använd <placeholder>:<värde> formatet.
+default-placeholders:
+  - 'agoniaguilds_guild_leader:N/A'
+  - 'agoniaguilds_guild_level:0'
+
+# Borde en bekräftelsemeny finnas när en spelare utför /is disband?
+disband-confirm: true
+
+# Borde en bekräftelsemeny finnas när en spelare utför /is kick?
+kick-confirm: true
+
+# Borde en bekräftelsemeny finnas när en spelare utför /is leave?
+leave-confirm: true
+
+# Alla inställning relaterade till guild namn.
+guild-names:
+  # Borde namn behövs när en guild skall skapas?
+  required-for-creation: true
+
+  # Maximum längden för namn.
+  max-length: 16
+
+  # Minimum längden för namn.
+  min-length: 3
+
+  # En lista av namn som inte kommer gå att använda.
+  filtered-names:
+    - fuck
+    - duck
+    - hypixel
+
+  # Borde du kunna använda färg i namnet på guilds?
+  color-support: true
+
+  # Borde namn visas på Guild topplistan?
+  guild-top: true
+
+  # Borde pluginet förbjuda att ha spelar namn som guild namn?
+  prevent-player-names: false
+
+# En lista av kommandor som skall ha en cooldown.
+# Cooldowns är i millisekunder.
+# Du kan stänga av denna sektion genom att använda:
+# commands-cooldown:
+#   random:
+#     cooldown: 0
+commands-cooldown:
+  test:
+    cooldown: 30000
+    bypass-permission: agonia.guild.cooldown.bypass.test
+
+# Sätt nummer formatet som skall användas.
+# Du kan hitta en lista av format under "Language Tag" kolumnen här:
+# https://www.oracle.com/technetwork/java/javase/java8locales-2095355.html
+number-format: "en-US"
+
+# Sätt datum formatet som skall användas.
+# Du kan hitta mer information angående det här:
+# https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
+date-format: "dd/MM/yyyy HH:mm:ss"
+
+# Borde spelare hoppa över menyer med endast ett item i dom?
+# När detta är aktiverat; kommer menyer som fylls på med endast ett item i dom att hoppas över.
+skip-one-item-menus: false
+
+# Borde bara tillbaka knappen fungera för att stänga menyer?
+only-back-button: false
+
+# En lista av kommandon som skall vara avstängda i pluginet.
+# Du kan lägga till en label eller alias av ett kommando för att stänga av det.
+disabled-commands: [ ]
+
+# Egna aliases för pluginets kommandon.
+command-aliases:
+  example-command:
+    - 'Aliase1'
+    - 'Aliase2'
+
+# Borde vanish spelare att vara gömda helt i tab-complete?
+tab-complete-hide-vanished: true
+
+# Delay mellan skyddade meddelanden (i ticks)
+protected-message-delay: 60
+
+# Den gräns av antal bossbars tasks som varje spelare kan ha aktiverade samtidigt.
+# När denna gräns nås, kommer gamla att tas bort.
+bossbar-limit: 1
+

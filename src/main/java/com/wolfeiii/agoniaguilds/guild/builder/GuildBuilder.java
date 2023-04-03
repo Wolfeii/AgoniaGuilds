@@ -2,6 +2,7 @@ package com.wolfeiii.agoniaguilds.guild.builder;
 
 import com.google.common.base.Preconditions;
 import com.wolfeiii.agoniaguilds.AgoniaGuilds;
+import com.wolfeiii.agoniaguilds.guild.Guild;
 import com.wolfeiii.agoniaguilds.user.GuildUser;
 import com.wolfeiii.agoniaguilds.utilities.value.Value;
 import org.jetbrains.annotations.Nullable;
@@ -20,6 +21,7 @@ public class GuildBuilder {
     public UUID uuid = null;
     public String guildName = "";
     public long creationTime = System.currentTimeMillis() / 1000;
+    public boolean isIgnored = false;
     public String description = "";
     public long lastTimeUpdated = System.currentTimeMillis() / 1000;
     public final List<GuildUser> members = new LinkedList<>();
@@ -92,5 +94,9 @@ public class GuildBuilder {
 
     public List<GuildUser> getGuildMembers() {
         return Collections.unmodifiableList(members);
+    }
+
+    public Guild build() {
+        return new Guild(this);
     }
 }

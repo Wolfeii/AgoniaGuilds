@@ -22,7 +22,7 @@ public class SQLDatabaseLoader extends MachineStateDatabaseLoader {
         }
 
         createGuildsTable();
-
+        createPlayersTable();
     }
 
     @Override
@@ -55,6 +55,7 @@ public class SQLDatabaseLoader extends MachineStateDatabaseLoader {
                 new Pair<>("ignored", "BOOLEAN"),
                 new Pair<>("name", "TEXT"),
                 new Pair<>("description", "TEXT"),
+                new Pair<>("level", "INTEGER"),
                 new Pair<>("last_time_updated", "BIGINT")
         );
 
@@ -67,6 +68,7 @@ public class SQLDatabaseLoader extends MachineStateDatabaseLoader {
         SQLHelper.createTable("guilds_members",
                 new Pair<>("guild", "UUID"),
                 new Pair<>("player", "UUID"),
+                new Pair<>("role", "INTEGER"),
                 new Pair<>("join_time", "BIGINT")
         );
 
@@ -81,5 +83,14 @@ public class SQLDatabaseLoader extends MachineStateDatabaseLoader {
         SQLHelper.modifyColumnType("guilds_settings", "crop_growth_multiplier", "DECIMAL");
         SQLHelper.modifyColumnType("guilds_settings", "spawner_rates_multiplier", "DECIMAL");
         SQLHelper.modifyColumnType("guilds_settings", "mob_drops_multiplier", "DECIMAL");
+    }
+
+    public void createPlayersTable() {
+        SQLHelper.createTable("players",
+                new Pair<>("uuid", "UUID PRIMARY KEY"),
+                new Pair<>("last_used_name", "TEXT"),
+                new Pair<>("last_used_skin", "TEXT"),
+                new Pair<>("last_time_updated", "BIGINT")
+        );
     }
 }
